@@ -1,0 +1,5 @@
+# temporary files created by Matlab editor
+*.m~
+
+# original LMNN implementation
+mLMNN2.3/*
