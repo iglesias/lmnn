@@ -18,9 +18,6 @@ maxiter = 1000;
 % objective
 obj = zeros(1,maxiter);
 
-% the number of feature vectors must be equal to the number of labels
-assert(n == length(y))
-
 %%% initializations
 
 % distance, identity matrix
@@ -52,8 +49,8 @@ while ~stop && t < maxiter
     
     % (sub-)gradient computation
     G = updateGradient(G, mu, x, Nc, Np);
-    % take gradient step in the distance and project onto SDP cone
-    M = sdpProject(M - stepsize*G);
+    % take gradient step in the distance and get PSD matrix
+    M = psdmat(M - stepsize*G);
     
     % update iteration counter
     iter = iter+1;
