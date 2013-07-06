@@ -16,4 +16,4 @@ Delta = diag(Delta(idxs));
 % re-arrange eigenvectors according to that order
 V = V(:,idxs);
 % project onto the matrix Q onto the PSD cone
-Q = V*Delta*D';
+Q = V*Delta*V';
