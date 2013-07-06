@@ -8,7 +8,7 @@ fprintf('testing getGenNN...\n\n')
 n = 1000;
 % input dimension
 d = 10;
-% number of different labels values, they will be taken from the interal
+% number of different labels values, they will be taken from the interval
 % [1,l]
 l = 10;
 % number of neighbours
@@ -59,3 +59,28 @@ fprintf('\t[OK]\n')
 %% psdProject
 
 %%%TODO
+
+%% lmnn
+
+fprintf('testing lmnn...\n\n')
+
+%%% preamble
+
+% number of examples
+n = 100;
+% input dimension
+d = 5;
+% number of different labels values, they will be taken from the interval
+% [1,l]
+l = 4;
+% number of neighbours
+k = 3;
+
+%%% test
+
+% generate feature vectors randomly
+x = rand(d, n);
+% genrate labels randomly
+y = randi(l, [n,1]);
+
+lmnn(x,y,k)
