@@ -18,6 +18,16 @@ maxiter = 1000;
 % objective
 obj = zeros(1,maxiter);
 
+% the labels must be given in a vector
+assert(any( size(y)==1 ))
+% if they are given in a row vector, transpose them
+if size(y,1) ~= 1
+    y = y';
+end
+
+% the number of feature vectors must be equal to the number of labels
+assert(n == length(y))
+
 %%% initializations
 
 % distance, identity matrix
@@ -25,7 +35,7 @@ M = eye(d);
 % iteration counter counter
 iter = 0;
 % previous active set of impostors, empty
-Np = {};
+Np = [];
 % compute target or genuine neighbours
 gen = getGenNN(x,y,k);
 % (sub-)gradient
@@ -35,16 +45,16 @@ stop = false;
 
 %%% main loop
 
-while ~stop && t < maxiter
+while ~stop && iter < maxiter
     
     % impostors computation
     if mod(iter,correction) == 0
         % compute exactly the set of impostors
-        Ncex = getImp('exact', x, M, gen);
+        Ncex = getImp(x, M, 'exact', y, gen);
         Nc = Ncex;
     else
         % approximate the set of impostors, \hat{Nc}
-        Nc = getImp('approx', Ncex, M);
+        Nc = getImp(x, M, 'approx', Ncex);
     end
     
     % (sub-)gradient computation

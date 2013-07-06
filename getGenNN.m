@@ -9,16 +9,6 @@ function gen = getGenNN(x,y,k)
 % get number of examples from data
 [~, n] = size(x);
 
-% the number of feature vectors must be equal to the number of labels
-assert(n == length(y))
-
-% the labels must be given in a vector
-assert(any( size(y)==1 ))
-% if they are given in a row vector, transpose them
-if size(y,1) ~= 1
-    y = y';
-end
-
 %%%
 
 % possible label values
