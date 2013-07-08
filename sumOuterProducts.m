@@ -1,11 +1,11 @@
-function sop = sumOuterProducts(x,a,b)
+function sop = sumOuterProducts(C,a,b)
 %
 % TODO DOC
 %
 
 assert(length(a) == length(b))
-sop = zeros(size(x,1));
+sop = zeros(size(C{1,1}));
 
 for i = 1:length(a)
-  sop = sop + x(:, a(i))*x(:, b(i))';
+  sop = sop + C{a(i),b(i)};
 end;

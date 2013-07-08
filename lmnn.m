@@ -10,17 +10,17 @@ function M = lmnn(x,y,k)
 % trade-off between pull and push forces in the objective or loss function
 mu = 0.5;
 % number of iterations between exact computation of impostors
-correction = 15;
+correction = 1;
 % learning rate used in gradient descent
-stepsize = 1e-09;
+stepsize = 1e-07;
 % maximum number of iterations
-maxiter = 1000;
+maxiter = 500;
 % objective
 obj = zeros(1,maxiter);
 
 % the labels must be given in a vector
 assert(any( size(y)==1 ))
-% if they are given in a row vector, transpose them
+% if they are not given in a row vector, transpose them
 if size(y,1) ~= 1
     y = y';
 end
@@ -38,8 +38,10 @@ iter = 0;
 Np = [];
 % compute target or genuine neighbours
 gen = getGenNN(x,y,k);
+% compute all outer products
+C = computeOuterProducts(x);
 % (sub-)gradient
-G = (1-mu)*sumOuterProducts(x, gen(1,:), gen(2,:));
+G = (1-mu)*sumOuterProducts(C, gen(2,:), gen(1,:));
 % stop criterion
 stop = false;
 
@@ -47,6 +49,7 @@ stop = false;
 
 while ~stop && iter < maxiter
     
+    fprintf('Starting iteration %d...\n', iter)
     % impostors computation
     if mod(iter,correction) == 0
         % compute exactly the set of impostors
@@ -56,19 +59,22 @@ while ~stop && iter < maxiter
         % approximate the set of impostors, \hat{Nc}
         Nc = getImp(x, M, 'approx', Ncex);
     end
+    fprintf('>>>>> total number of impostors neighbours is %d\n', size(Nc,2))
     
     % (sub-)gradient computation
-    G = updateGradient(G, mu, x, Nc, Np);
+    G = updateGradient(G, C, Nc, Np, mu);
     % take gradient step in the distance and get PSD matrix
     M = psdmat(M - stepsize*G);
     
     % update iteration counter
     iter = iter+1;
     % compute objective
-    obj(iter) = lmnnObj(mu, x, gen, Nc);
+    obj(iter) = lmnnObj(x, M, C, gen, Nc, mu);
+    fprintf('finished! The objective is %f\n', obj(iter))
 
     % correct stepsize
     if iter > 1
+        fprintf('>>>>> stepsize used is %e\n', stepsize)
         % difference between current and previous objective
         delta = obj(iter) - obj(max(iter-1,1));
         if delta > 0
