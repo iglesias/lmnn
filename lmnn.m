@@ -1,4 +1,4 @@
-function M = lmnn(x,y,k)
+function L = lmnn(x,y,k)
 %
 % TODO DOC
 %
@@ -30,9 +30,9 @@ assert(n == length(y))
 
 %%% initializations
 
-% distance, identity matrix
-M = eye(d);
-% iteration counter counter
+% linear transformation, identity matrix
+L = eye(d);
+% iteration counter
 iter = 0;
 % previous active set of impostors, empty
 Np = [];
@@ -53,30 +53,28 @@ while ~stop && iter < maxiter
     % impostors computation
     if mod(iter,correction) == 0
         % compute exactly the set of impostors
-        Ncex = getImp(x, M, 'exact', y, gen);
+        Ncex = getImp(x, L, gen, 'exact', y);
         Nc = Ncex;
     else
         % approximate the set of impostors, \hat{Nc}
-        Nc = getImp(x, M, 'approx', Ncex);
+        Nc = getImp(x, L, gen, 'approx', Ncex);
     end
     fprintf('>>>>> total number of impostors neighbours is %d\n', size(Nc,2))
-    
+
     % (sub-)gradient computation
     G = updateGradient(G, C, Nc, Np, mu);
     % take gradient step in the distance and get PSD matrix
-    M = psdmat(M - stepsize*G);
+    L = L - stepsize*2*L*G;
     
     % update iteration counter
     iter = iter+1;
     % compute objective
-    obj(iter) = lmnnObj(x, M, C, gen, Nc, mu);
-    fprintf('finished! The objective is %f\n', obj(iter))
+    obj(iter) = lmnnObj(x, L, C, gen, Nc, mu);
 
     % correct stepsize
     if iter > 1
-        fprintf('>>>>> stepsize used is %e\n', stepsize)
         % difference between current and previous objective
-        delta = obj(iter) - obj(max(iter-1,1));
+        delta = obj(iter) - obj(iter-1);
         if delta > 0
             % the objective has increased in this iteration
             stepsize = stepsize*0.5;
@@ -88,4 +86,6 @@ while ~stop && iter < maxiter
     
     % update previous impostor set
     Np = Nc;
+
+    fprintf('iteration=%d, objective=%.4f, stepsize=%.4E\n', iter, obj(iter), stepsize);
 end

@@ -1,10 +1,12 @@
-function obj = lmnnObj(x, M, C, gen, Nc, mu)
+function obj = lmnnObj(x, L, C, gen, Nc, mu)
 %
 % TODO DOC
 %
 
 % get the number of data examples
 n = size(x,2);
+% compute the Mahalanobis matrix from the linear transform
+M = L'*L;
 % initialize the objective
 obj = 0;
 
