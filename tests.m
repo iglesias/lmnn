@@ -85,7 +85,7 @@ y = randi(l, [n,1]);
 
 lmnn(x,y,k)
 
-%% simple data
+%% target neighbours simple data
 
 x=[0 0; 0 -1; 1 1; -1 1]';
 y=[0 0 1 1];
@@ -96,6 +96,13 @@ disp('labels vector='), disp(y);
 gen = getGenNN(x,y,k);
 disp('target neighbors'), disp(gen)
 
+%% LMNN simple data
+
+x=[0 0; 0 -1; 1 1; -1 1]';
+y=[0 0 1 1];
+k=1;
+disp('feature_matrix='), disp(x);
+disp('labels vector='), disp(y);
 
 L = lmnn(x,y,k);
 disp('L='), disp(L);
