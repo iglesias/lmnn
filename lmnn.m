@@ -10,7 +10,7 @@ function L = lmnn(x,y,k)
 % trade-off between pull and push forces in the objective or loss function
 mu = 0.5;
 % number of iterations between exact computation of impostors
-correction = 1;
+correction = 15;
 % learning rate used in gradient descent
 stepsize = 1e-07;
 % maximum number of iterations
@@ -49,7 +49,6 @@ stop = false;
 
 while ~stop && iter < maxiter
     
-    fprintf('Starting iteration %d...\n', iter)
     % impostors computation
     if mod(iter,correction) == 0
         % compute exactly the set of impostors
@@ -59,7 +58,7 @@ while ~stop && iter < maxiter
         % approximate the set of impostors, \hat{Nc}
         Nc = getImp(x, L, gen, 'approx', Ncex);
     end
-    fprintf('>>>>> total number of impostors neighbours is %d\n', size(Nc,2))
+% % %     fprintf('>>>>> total number of impostors neighbours is %d\n', size(Nc,2))
 
     % (sub-)gradient computation
     G = updateGradient(G, C, Nc, Np, mu);
@@ -69,7 +68,8 @@ while ~stop && iter < maxiter
     % update iteration counter
     iter = iter+1;
     % compute objective
-    obj(iter) = lmnnObj(x, L, C, gen, Nc, mu);
+    M = L'*L;
+    obj(iter) = sum(sum(M.*G'));
 
     % correct stepsize
     if iter > 1
