@@ -46,7 +46,7 @@ if strcmp(mode, 'exact')
     
 elseif strcmp(mode, 'approx')
 
-    fprintf('>>>>> getImp: approx mode selected\n')
+% % %     fprintf('>>>>> getImp: approx mode selected\n')
     % ensure that the correct number of arguments is given
     assert(length(varargin) == 1)
     % extract arguments

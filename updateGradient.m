@@ -8,27 +8,20 @@ function G = updateGradient(Gp, C, Nc, Np, mu)
 
 % gradient update
 if isempty(Np_Nc) && isempty(Nc_Np)
-    fprintf('>>>>> in gradient update both are empty\n')
-    
-    if numel(Np_Nc) > 0
-        assert( all(Np_Nc(:)==Nc_Np(:)) )
-    else
-        assert( isempty(Np_Nc) && isempty(Nc_Np) )
-    end
-    
+% %     fprintf('>>>>> in gradient update both are empty\n')
     G = Gp;
 elseif isempty(Np_Nc)
-    fprintf('>>>>> in gradient update Np_Nc is empty\n')
+% %     fprintf('>>>>> in gradient update Np_Nc is empty\n')
     
     G = Gp + mu*(sumOuterProducts(C, Nc_Np(1,:), Nc_Np(2,:)) - ...
                  sumOuterProducts(C, Nc_Np(1,:), Nc_Np(3,:)));
 elseif isempty(Nc_Np)
-    fprintf('>>>>> in gradient update Nc_Np is empty\n')
+% %     fprintf('>>>>> in gradient update Nc_Np is empty\n')
     
     G = Gp - mu*(sumOuterProducts(C, Np_Nc(1,:), Np_Nc(2,:)) - ...
                  sumOuterProducts(C, Np_Nc(1,:), Np_Nc(3,:)));
 else % none is empty
-    fprintf('>>>>> in gradient update none are empty\n')
+% %     fprintf('>>>>> in gradient update none are empty\n')
     
     G = Gp - mu*(sumOuterProducts(C, Np_Nc(1,:), Np_Nc(2,:)) - ...
                  sumOuterProducts(C, Np_Nc(1,:), Np_Nc(3,:))) ...
