@@ -25,24 +25,9 @@ if strcmp(mode, 'exact')
     % ensure that the correct number of arguments is given
     assert(length(varargin) == 1)
     % extract arguments
-    y = varargin{1};    
+    y = varargin{1};
     
-    %FIXME this is way too slow!!
-    % compute impostors
-    for i = 1:n % for each training example
-        for j = 1:k % for each target neighbour
-            % get training examples labelled differently
-            idxs = find(y~=y(i));
-            for idx = idxs % for each possible impostor
-                % compute square distance to current training example
-                % and compare with the distance plus margin to the
-                % current target neighbour
-                if sum( (Lx(:,i)-Lx(:,idx)).^2 ) <= Ni(j,i)
-                    N = [N [i; gen(1, (j-1)*n+i); idx]];
-                end
-            end
-        end
-    end
+    N = getExactImp(Lx,Ni,y,gen,k);
     
 elseif strcmp(mode, 'approx')
 
@@ -73,4 +58,4 @@ elseif strcmp(mode, 'approx')
 else
     error('%s mode not available, use either exact or approx', mode)
 end
-    
+
