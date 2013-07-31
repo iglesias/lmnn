@@ -87,5 +87,6 @@ while ~stop && iter < maxiter
     % update previous impostor set
     Np = Nc;
 
-    fprintf('iteration=%d, objective=%.4f, stepsize=%.4E\n', iter, obj(iter), stepsize);
+    fprintf('iteration=%d, #impostors=%d, objective=%.4f, stepsize=%.4E\n', ...
+        iter, size(Nc,2), obj(iter), stepsize);
 end
