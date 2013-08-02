@@ -38,10 +38,8 @@ iter = 0;
 Np = [];
 % compute target or genuine neighbours
 gen = getGenNN(x,y,k);
-% compute all outer products
-C = computeOuterProducts(x);
 % (sub-)gradient
-G = (1-mu)*sumOuterProducts(C, gen(2,:), gen(1,:));
+G = (1-mu)*sumOuterProducts(x,gen(2,:),gen(1,:));
 % stop criterion
 stop = false;
 
@@ -61,7 +59,7 @@ while ~stop && iter < maxiter
 % % %     fprintf('>>>>> total number of impostors neighbours is %d\n', size(Nc,2))
 
     % (sub-)gradient computation
-    G = updateGradient(G, C, Nc, Np, mu);
+    G = updateGradient(x, G, Nc, Np, mu);
     % take gradient step in the distance and get PSD matrix
     L = L - stepsize*2*L*G;
     
