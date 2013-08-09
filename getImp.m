@@ -36,25 +36,9 @@ elseif strcmp(mode, 'approx')
     assert(length(varargin) == 1)
     % extract arguments
     Ncex = varargin{1};
-    % memory pre-allocation
-    N = zeros(size(Ncex));
-    % count of the number of impostors
-    nimp = 0;
-
-    % for each impostor present in the set that was exactly computed last
-    % time
-    for idx = 1:size(Ncex,2)
-        i = Ncex(1,idx); j = Ncex(2,idx); l = Ncex(3,idx);
-
-        if sum( (Lx(:,i)-Lx(:,l)).^2 ) <= Ni(gen(1, gen(2,:)==i)==j,i)
-            nimp = nimp + 1;
-            N(:,nimp) = [i; j; l];
-        end
-    end
-
-    % resize the output
-    N = N(:,1:nimp);
     
+    N = getApproxImp(Lx,Ni,Ncex);
+
 else
     error('%s mode not available, use either exact or approx', mode)
 end
