@@ -14,7 +14,7 @@ correction = 15;
 % learning rate used in gradient descent
 stepsize = 1e-07;
 % maximum number of iterations
-maxiter = 500;
+maxiter = 1000;
 % objective
 obj = zeros(1,maxiter);
 
@@ -67,7 +67,7 @@ while ~stop && iter < maxiter
     iter = iter+1;
     % compute objective
     M = L'*L;
-    obj(iter) = sum(sum(M.*G'));
+    obj(iter) = sum(sum(M.*G')) + mu*size(Nc,2);
 
     % correct stepsize
     if iter > 1
