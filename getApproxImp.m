@@ -4,7 +4,7 @@ function N = getApproxImp(Lx, Ni, imp)
 
 % here I am just using Kilian's original nomenclature (no real idea what it
 % stands for)
-g0 = cdist(Lx,imp(1,:),imp(3,:)); %% can be wrong
+g0 = cdist(Lx,imp(1,:),imp(3,:));
 g1 = Ni(:,imp(1,:));  
 
 active = g0<g1;
