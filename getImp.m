@@ -3,8 +3,6 @@ function N = getImp(x, L, gen, mode, varargin)
 % TODO DOC
 %
 
-% initialize impostors set
-N = [];
 % transform the data
 Lx = L*x;
 % get the number of data examples
