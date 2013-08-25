@@ -9,6 +9,7 @@ plot(x(1,7:8),x(2,7:8),'sr','MarkerSize',10,'MarkerFaceColor','r')
 hold off
 xlabel('x')
 ylabel('y')
+axis([-1.5 1.5 -1.5 1.5]);
 
 end
 
