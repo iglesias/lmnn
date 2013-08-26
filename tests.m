@@ -124,3 +124,11 @@ subplot(122)
 graphical_insight_plot(Lx);
 title('Data transformed after LMNN')
 grid on
+
+%% diagonal mode
+% (the linear transformation L is forced to be a diagonal matrix)
+
+load data/wine.data;
+x = wine(:,2:end)';
+y = wine(:,1)';
+L = lmnn(x,y,1,'diagonal');

@@ -1,4 +1,4 @@
-function L = lmnn(x,y,k)
+function L = lmnn(x,y,k,varargin)
 %
 % TODO DOC
 %
@@ -17,6 +17,15 @@ stepsize = 1e-07;
 maxiter = 1000;
 % objective
 obj = zeros(1,maxiter);
+% whether the output transformation L should be diagonal
+diagonal = false;
+
+% optional arguments
+for i = 1:length(varargin)
+    if strcmp(varargin{i},'diagonal')
+        diagonal = true;
+    end
+end
 
 % the labels must be given in a vector
 assert(any( size(y)==1 ))
@@ -61,7 +70,7 @@ while ~stop && iter < maxiter
     % (sub-)gradient computation
     G = updateGradient(x, G, Nc, Np, mu);
     % take gradient step in the distance and get PSD matrix
-    L = L - stepsize*2*L*G;
+    L = gradientStep(L, G, stepsize, diagonal);
     
     % update iteration counter
     iter = iter+1;
