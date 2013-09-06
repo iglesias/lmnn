@@ -3,3 +3,11 @@
 
 # original LMNN implementation
 mLMNN2.3/*
+
+# mLMNN2.4 binaries
+mLMNN2.4/mexfunctions/binaries/*
+mLMNN2.4/gbrt/binaries/*
+mLMNN2.4/mtrees/binaries/*
+
+# mLMNN2.4 data
+mLMNN2.4/data/*
