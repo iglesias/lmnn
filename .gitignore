@@ -1,6 +1,9 @@
 # temporary files created by Matlab editor
 *.m~
 
+# data directory
+data/*
+
 # original LMNN implementation
 mLMNN2.3/*
 
@@ -11,3 +14,4 @@ mLMNN2.4/mtrees/binaries/*
 
 # mLMNN2.4 data
 mLMNN2.4/data/*
+
