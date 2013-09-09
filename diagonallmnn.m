@@ -1,4 +1,4 @@
-function L = lmnn(x,y,k,varargin)
+function L = diagonallmnn(x,y,k,varargin)
 %
 % TODO DOC
 %
@@ -9,25 +9,21 @@ function L = lmnn(x,y,k,varargin)
 [d, n] = size(x);
 % trade-off between pull and push forces in the objective or loss function
 mu = 0.5;
-% regularization multiplying the 2-norm trace(L) term if diagonal mode used
-lambda = 100;
+% regularization multiplying the 1-norm trace(L) term
+lambda = 5;
 % number of iterations between exact computation of impostors
 correction = 15;
 % learning rate used in gradient descent
-stepsize = 1e-07;
+stepsize = 1e-4;
 % maximum number of iterations
 maxiter = 500;
 % objective
 obj = zeros(1,maxiter);
-% whether the output transformation L should be diagonal
-diagonal = false;
+% diagonal mode is forced
+diagonal = true;
 
 % optional arguments
 for i = 1:length(varargin)
-    if strcmp(varargin{i},'diagonal')
-        diagonal = true;
-    end
-
     if strcmp(varargin{i},'maxiter')
         maxiter = varargin{i+1};
     end
@@ -47,19 +43,16 @@ assert(n == length(y))
 
 % linear transformation, identity matrix
 L = eye(d);
+Lp = L;
 % iteration counter
 iter = 0;
 % previous active set of impostors, empty
 Np = [];
 % compute target or genuine neighbours
 gen = getGenNN(x,y,k);
-% (sub-)gradient
-if diagonal
-    sopgen = sumOuterProducts(x,gen(2,:),gen(1,:));
-    G = (1-mu)*2*L*sopgen + lambda*eye(d);
-else
-    G = (1-mu)*sumOuterProducts(x,gen(2,:),gen(1,:));
-end
+% (sub-)gradient initialization
+sopgen = sumOuterProducts(x,gen(2,:),gen(1,:));
+G = (1-mu)*2*L*sopgen + lambda*eye(d);
 % stop criterion
 stop = false;
 
@@ -68,28 +61,20 @@ stop = false;
 while ~stop && iter < maxiter
     
     % impostors computation
-    if mod(iter,correction) == 0
-        % compute exactly the set of impostors
-        Ncex = getImp(x, L, gen, 'exact', y);
-        Nc = Ncex;
-    else
-        % approximate the set of impostors, \hat{Nc}
-        Nc = getImp(x, L, gen, 'approx', Ncex);
-    end
-% % %     fprintf('>>>>> total number of impostors neighbours is %d\n', size(Nc,2))
+    N = getImp(x, L, gen, 'exact', y);
+    fprintf('>>>>> total number of impostors is %d\n', size(N,2))
 
+    % (sub-)gradient computation
+    G = updateGradientL(x, L, Lp, G, sopgen, N, mu);
     % store linear transform at this point, required to update the gradient
     Lp = L;
-    % (sub-)gradient computation
-    G = updateGradientL(x, L, Lp, G, sopgen, Nc, Np, mu);
     % take gradient step in the distance and get PSD matrix
     L = gradientStepL(L, G, stepsize, diagonal);
     
     % update iteration counter
     iter = iter+1;
     % compute objective
-    M = L'*L;
-    obj(iter) = sum(sum(L.*G')) + mu*size(Nc,2) + lambda*trace(L);
+    obj(iter) = sum(sum((L'*L).*G')) + mu*size(N,2) + lambda*trace(L);
 
     % correct stepsize
     if iter > 1
@@ -103,10 +88,7 @@ while ~stop && iter < maxiter
             stepsize = stepsize*1.01;
         end
     end
-    
-    % update previous impostor set
-    Np = Nc;
 
     fprintf('iteration=%-4d, #impostors=%d, objective=%.4f, stepsize=%.4E\n', ...
-        iter, size(Nc,2), obj(iter), stepsize);
+        iter, size(N,2), obj(iter), stepsize);
 end
