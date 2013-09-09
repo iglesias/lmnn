@@ -131,7 +131,7 @@ if(size(x,1)>length(L)) error('x and L must have matching dimensions!\n');end;
  pars.maximp0=1000000;
  pars.treesize=50;
  pars.valindex=[];
- pars.checkup=2; %0=notree 1=tree 2=choose
+ pars.checkup=0; %0=notree 1=tree 2=choose
  
  pars.targetlabels=[];
  
