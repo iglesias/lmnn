@@ -1,4 +1,4 @@
-function L = lmnn(x,y,k,varargin)
+function [L,obj] = lmnn(x,y,k,varargin)
 %
 % TODO DOC
 %
@@ -24,6 +24,10 @@ diagonal = false;
 for i = 1:length(varargin)
     if strcmp(varargin{i},'diagonal')
         diagonal = true;
+    end
+
+    if strcmp(varargin{i},'maxiter')
+        maxiter = varargin{i+1};
     end
 end
 
@@ -51,11 +55,15 @@ gen = getGenNN(x,y,k);
 G = (1-mu)*sumOuterProducts(x,gen(2,:),gen(1,:));
 % stop criterion
 stop = false;
+% threshold in the objective for termination
+thresho = 1e-7;
+% threshold in the step size for termination
+thresha = 1e-22;
 
 %%% main loop
 
 while ~stop && iter < maxiter
-    
+
     % impostors computation
     if mod(iter,correction) == 0
         % compute exactly the set of impostors
@@ -69,9 +77,9 @@ while ~stop && iter < maxiter
 
     % (sub-)gradient computation
     G = updateGradient(x, G, Nc, Np, mu);
-    % take gradient step in the distance and get PSD matrix
+    % take gradient step
     L = gradientStep(L, G, stepsize, diagonal);
-    
+
     % update iteration counter
     iter = iter+1;
     % compute objective
@@ -90,10 +98,24 @@ while ~stop && iter < maxiter
             stepsize = stepsize*1.01;
         end
     end
-    
+
     % update previous impostor set
     Np = Nc;
 
-    fprintf('iteration=%-4d, #impostors=%d, objective=%.4f, stepsize=%.4E\n', ...
+    % if a few iterations have already taken place, check termination
+    % criteria
+    if iter > 10
+        if max(abs(diff(obj(iter-3:iter)))) < thresho*obj(iter)
+            fprintf('Minimum objective reached. No more progress!\n')
+            stop = true;
+        elseif stepsize < thresha
+            fprintf('Stepsize too small. No more progress!\n');
+            stop = true;
+        end
+    end
+
+    fprintf('%-4d. #impostors=%d, objective=%.2f, stepsize=%.4E\n', ...
         iter, size(Nc,2), obj(iter), stepsize);
 end
+
+obj = obj(1:iter);

@@ -9,6 +9,7 @@ if diagonal
    M = diag(M);
    L = diag(sqrt(max(M,0)));
 else
+    % take gradient step in L direction
     L = L - stepsize*2*L*G;
 end
 

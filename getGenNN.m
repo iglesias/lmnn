@@ -38,7 +38,7 @@ function NN = kNN(x1,x2,ks)
 %
 % TODO DOC
 %
-% Extracted from LMNN Version 2.3 by Kilian Q. Weinbergerr (2005)
+% Extracted from LMNN Version 2.3 by Kilian Q. Weinberger (2005)
 
 % size of the batch used for the batch computation
 B = 750;
