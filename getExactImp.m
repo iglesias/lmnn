@@ -1,4 +1,4 @@
-function N = getExactImp(Lx, Ni, y, gen, k)
+function N = getExactImp(Lx, y, gen, k)
 
 % initialize impostors set
 N = [];
@@ -6,6 +6,11 @@ N = [];
 un = unique(y);
 % shorthand for the number of examples
 n = size(Lx,2);
+% compute square distances to target neighbours plus margin
+Ni = zeros(k,n);
+for i = 1:k
+    Ni(i,:) = sum( (Lx - Lx(:, gen(1, (i-1)*n+1:i*n) )).^2 ) +1;
+end
 
 for i = un(1:end-1) % for each label value except from the largest one
     % get the indices of the examples labelled as i

@@ -11,11 +11,6 @@ n = size(x,2);
 assert(mod( size(gen,2), n ) == 0)
 % get the number of target neighbours used
 k = size(gen,2)/n;
-% compute square distances to target neighbours plus margin
-Ni = zeros(k,n);
-for i = 1:k
-    Ni(i,:) = sum( (Lx - Lx(:, gen(1, (i-1)*n+1:i*n) )).^2 ) +1;
-end
 
 if strcmp(mode, 'exact')
     
@@ -25,7 +20,7 @@ if strcmp(mode, 'exact')
     % extract arguments
     y = varargin{1};
     
-    N = getExactImp(Lx,Ni,y,gen,k);
+    N = getExactImp(Lx, y, gen, k);
     
 elseif strcmp(mode, 'approx')
 
@@ -35,7 +30,7 @@ elseif strcmp(mode, 'approx')
     % extract arguments
     Ncex = varargin{1};
     
-    N = getApproxImp(Lx,Ni,Ncex);
+    N = getApproxImp(Lx, Ncex);
 
 else
     error('%s mode not available, use either exact or approx', mode)
