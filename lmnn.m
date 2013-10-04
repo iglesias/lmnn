@@ -102,7 +102,7 @@ while ~stop && iter < maxiter
     % update previous impostor set
     Np = Nc;
 
-    % if a few iterations have already taken place, check termination
+    % if few iterations have already taken place, check termination
     % criteria
     if iter > 10
         if max(abs(diff(obj(iter-3:iter)))) < thresho*obj(iter)
