@@ -19,7 +19,7 @@ k = 5;
 % generate feature vectors randomly
 x = rand(d, n);
 % genrate labels randomly
-y = randi(l, [n,1]);
+y = randi(l, [1,n]);
 
 % result using the function to test
 gen = getGenNN(x,y,k);
@@ -55,10 +55,6 @@ for i = 1:n
 end
 
 fprintf('\t[OK]\n')
-
-%% psdProject
-
-%%%TODO
 
 %% lmnn
 
